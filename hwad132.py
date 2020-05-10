@@ -10,9 +10,9 @@ class Contact:
 
     def __str__(self):
         if self.starred == True:
-            self.starred_rus = 'да'
+            starred_rus = 'да'
         elif self.starred == False:
-            self.starred_rus = 'нет'
+            starred_rus = 'нет'
 
         self.str_args = str()
         for arg in self.args:
@@ -25,7 +25,7 @@ class Contact:
         return f'Имя: {self.firstname}\n' \
                f'Фамилия: {self.lastname}\n' \
                f'Телефон: {self.number}\n' \
-               f'В избранных: {self.starred_rus}\n' \
+               f'В избранных: {starred_rus}\n' \
                f'Дополнительная информация: \n' \
                f'{self.str_args}' \
                f'{self.str_kwargs}'
@@ -34,26 +34,41 @@ class Contact:
 class Phonebook:
 
     def __init__(self):
-        contact = Contact()
-        self.contacts = {contact.number: contact}
+        self.contact = Contact('', '', '')
+        self.contacts = {self.contact.number: self.contact}
 
-    def add_contact(self, contact, *args, **kwargs):
-        contact.firstname = input('Введите имя контакта')
-        contact.lastname = input('Введите фамилию')
-        contact.number = input('Введите номер телефона')
-        starred_input = input('Добавить контакт в избранные? (да/нет)')
-        if starred_input == 'да':
-            contact.starred = 'True'
-        elif starred_input == 'нет':
-            contact.starred = 'False'
-        contact.args = input('Введите дополнительную информацию о контакте (через запятую): ')
-        while input('Добавить соцсеть? (да/нет)') == 'да':
-            contact.kwargs = dict()
-            kwargs_input = input('Введите название и адрес соцсети через запятую: ')
-            contact.kwargs.key = kwargs_input[0]
-            contact.kwargs.value = kwargs_input[1]
 
-        self.contacts.update(contact.number, contact)
+    def add_contacts(self, *args, **kwargs):
+        firstname = input('Введите имя контакта ')
+        lastname = input('Введите фамилию ')
+        number = input('Введите номер телефона ')
+        starred_rus = input('Добавить контакт в избранные? (да/нет) ')
+        if starred_rus == 'да':
+            starred = True
+        elif starred_rus == 'нет':
+            starred = False
+        args_list = []
+        while True:
+            arg = input('Введите дополнительную информацию о контакте или введите "-", чтобы пропустить ввод: ')
+            if arg == '-':
+                break
+            else:
+                args_list.append(arg)
+        args = tuple(args_list)
+        while input('Добавить соцсеть? (да/нет) ') == 'да':
+            kwargs = dict()
+            kwargs_key = input('Введите название соцсети: ')
+            kwargs_value = input('Введите адрес соцсети: ')
+            kwargs.update({kwargs_key: kwargs_value})
 
-phonebook = Phonebook()
-phonebook.add_contact()
+        self.contact = Contact(firstname, lastname, number, starred, *args, **kwargs)
+        self.contacts.update({self.contact.number: self.contact})
+
+
+if __name__ == '__main__':
+    phonebook = Phonebook()
+
+    phonebook.add_contacts()
+    print(phonebook.contacts)
+    for contact in phonebook.contacts.values():
+        print(contact)
