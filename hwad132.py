@@ -31,11 +31,12 @@ class Contact:
                f'{self.str_kwargs}'
 
 
-class Phonebook:
+class Phonebook():
 
-    def __init__(self):
+    def __init__(self, name):
         self.contact = Contact('', '', '')
         self.contacts = {self.contact.number: self.contact}
+        self.name = name
 
 
     def add_contacts(self, *args, **kwargs):
@@ -70,14 +71,42 @@ class Phonebook:
             self.contacts.update({self.contact.number: self.contact})
 
 
+    def delete_contact(self, number):
+        try:
+            self.contacts.pop(number)
+            print('Контакт удален')
+        except KeyError:
+            print('Такого номера не существует')
+
+
+    def search_starred_contacts(self):
+        for value in phonebook.contacts.values():
+            if value.starred == True:
+                print(value)
+
+
+    def search_by_name(self):
+        firstname_search = input('Введите имя: ')
+        lastname_search = input('Введите фамилию: ')
+        n = 0
+        for value in phonebook.contacts.values():
+            if value.firstname == firstname_search and value.lastname == lastname_search:
+                print(value)
+                n += 1
+        if n == 0:
+            print('Такого контакта не существует')
+
+
 if __name__ == '__main__':
-    phonebook = Phonebook()
+    phonebook = Phonebook('Контакты')
     while True:
-        func = input('Введите команду:\n'
+        func = input('Введите команду:\n'                     
                      'a - добавить контакт(ы)\n'
                      'p - печать телефонной книги\n'
-                     'q - выход\n'
-                     '')
+                     'd - удаление контакта по номеру телефона\n'
+                     's - поиск всех избранных номеров\n'
+                     'ns - поиск контакта по имени и фамилии\n'
+                     'q - выход\n')
         if func == 'q':
             break
         elif func == 'a':
@@ -85,3 +114,10 @@ if __name__ == '__main__':
         elif func == 'p':
             for contact in phonebook.contacts.values():
                 print(contact)
+        elif func == 'd':
+            number_to_delete = input('Введите номер телефона удаляемого контакта: ')
+            phonebook.delete_contact(number_to_delete)
+        elif func == 's':
+            phonebook.search_starred_contacts()
+        elif func == 'ns':
+            phonebook.search_by_name()
