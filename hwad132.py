@@ -39,36 +39,49 @@ class Phonebook:
 
 
     def add_contacts(self, *args, **kwargs):
-        firstname = input('Введите имя контакта ')
-        lastname = input('Введите фамилию ')
-        number = input('Введите номер телефона ')
-        starred_rus = input('Добавить контакт в избранные? (да/нет) ')
-        if starred_rus == 'да':
-            starred = True
-        elif starred_rus == 'нет':
-            starred = False
-        args_list = []
         while True:
-            arg = input('Введите дополнительную информацию о контакте или введите "-", чтобы пропустить ввод: ')
-            if arg == '-':
+            user_input = input('Добавить новый контакт (да/нет)? ')
+            if user_input == 'нет':
                 break
-            else:
-                args_list.append(arg)
-        args = tuple(args_list)
-        while input('Добавить соцсеть? (да/нет) ') == 'да':
-            kwargs = dict()
-            kwargs_key = input('Введите название соцсети: ')
-            kwargs_value = input('Введите адрес соцсети: ')
-            kwargs.update({kwargs_key: kwargs_value})
+            elif user_input == 'да':
+                firstname = input('Введите имя контакта ')
+                lastname = input('Введите фамилию ')
+                number = input('Введите номер телефона ')
+                starred_rus = input('Добавить контакт в избранные? (да/нет) ')
+                if starred_rus == 'да':
+                    starred = True
+                elif starred_rus == 'нет':
+                    starred = False
+                args_list = []
+                while True:
+                    arg = input('Введите дополнительную информацию о контакте или введите "-", чтобы пропустить ввод: ')
+                    if arg == '-':
+                        break
+                    else:
+                        args_list.append(arg)
+                args = tuple(args_list)
+                while input('Добавить соцсеть? (да/нет) ') == 'да':
+                    kwargs = dict()
+                    kwargs_key = input('Введите название соцсети: ')
+                    kwargs_value = input('Введите адрес соцсети: ')
+                    kwargs.update({kwargs_key: kwargs_value})
 
-        self.contact = Contact(firstname, lastname, number, starred, *args, **kwargs)
-        self.contacts.update({self.contact.number: self.contact})
+                self.contact = Contact(firstname, lastname, number, starred, *args, **kwargs)
+            self.contacts.update({self.contact.number: self.contact})
 
 
 if __name__ == '__main__':
     phonebook = Phonebook()
-
-    phonebook.add_contacts()
-    print(phonebook.contacts)
-    for contact in phonebook.contacts.values():
-        print(contact)
+    while True:
+        func = input('Введите команду:\n'
+                     'a - добавить контакт(ы)\n'
+                     'p - печать телефонной книги\n'
+                     'q - выход\n'
+                     '')
+        if func == 'q':
+            break
+        elif func == 'a':
+            phonebook.add_contacts()
+        elif func == 'p':
+            for contact in phonebook.contacts.values():
+                print(contact)
